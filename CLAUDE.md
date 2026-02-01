@@ -94,8 +94,9 @@ com.whatshu.whatshu_be
 - 요청 DTO의 경우 `@Getter`, `@NoArgsConstructor` 어노테이션을 붙입니다.
 
 ### 3) 컨트롤러
-- 컨트롤러는 항상 `ResponseEntity<ApiResponse>`를 반환합니다.
-  - `ApiResponse`는 이 프로젝트에서 사용되는 표준 응답 객체입니다.
+- 컨트롤러는 항상 `ResponseEntity<CommonResponseBody<T>>`를 반환합니다.
+  - `CommonResponseBody<T>`는 이 프로젝트에서 사용되는 공통 응답 본문입니다.
+    - `T`는 DTO 타입입니다.
 - 예외를 직접 컨트롤러에서 처리하지 않습니다.
 
 ### 4) 서비스
