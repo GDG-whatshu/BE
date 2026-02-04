@@ -1,5 +1,6 @@
 package com.whatshu.whatshu_be.membership.service;
 
+import com.whatshu.whatshu_be.membership.dto.CohortRequestDto;
 import com.whatshu.whatshu_be.membership.dto.CohortResponseDto;
 import com.whatshu.whatshu_be.membership.entity.Cohort;
 import com.whatshu.whatshu_be.membership.mapper.CohortMapper;
@@ -20,5 +21,15 @@ public class CohortService {
         List<CohortResponseDto> cohortsListResponse = cohorts.stream().map(CohortResponseDto::from).toList();
 
         return cohortsListResponse;
+    }
+
+    public CohortResponseDto createCohort(CohortRequestDto cohortRequestDto) {
+        Cohort cohort = Cohort.from(cohortRequestDto);
+
+        cohortMapper.insertCohort(cohort);
+
+        CohortResponseDto cohortResponse = CohortResponseDto.from(cohort);
+
+        return cohortResponse;
     }
 }
