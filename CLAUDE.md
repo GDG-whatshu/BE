@@ -85,7 +85,7 @@ com.whatshu.whatshu_be
 
 ### 1) 엔티티
 - 이 프로젝트에서 엔티티는 MyBatis에 의하여 쿼리 결과가 매핑되는 POJO로 정의합니다.
-- `@Getter`, `@NoArgsConstructor` 어노테이션을 붙입니다.
+- `@Getter`, `@Builder` 어노테이션을 붙입니다.
 
 ### 2) DTO
 - 클래스 이름을 지을 때, 요청과 응답을 구분합니다.
