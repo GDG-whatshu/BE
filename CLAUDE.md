@@ -97,6 +97,13 @@ com.whatshu.whatshu_be
 - 컨트롤러는 항상 `ResponseEntity<CommonResponseBody<T>>`를 반환합니다.
   - `CommonResponseBody<T>`는 이 프로젝트에서 사용되는 공통 응답 본문입니다.
     - `T`는 DTO 타입입니다.
+- 클래스에 `@RequestMapping("/상위 경로")`를 붙이고, 각 메소드에 적절한 HTTP 메소드(하위 경로)를 매핑합니다.
+    - 예시 1 (HTTP 메소드 및 하위 경로)
+      - `/auth` 요청에 대해 `AuthController`에 `@RequestMapping("/auth")` 붙임
+      -  로그인 메소드에 `@PostMapping("/login")`과 같이 적절한 HTTP 메소드, 하위 경로 매핑
+    - 예시 2 (HTTP 메소드만)
+      - `/cohorts/` 요청에 대해 `CohortController`에 `@RequestMapping("/cohorts")` 붙임
+      - 전체 Cohort 목록을 조회하는 메소드에는 하위 경로 필요하지 않으므로 `@GetMapping`만 붙임
 - 예외를 직접 컨트롤러에서 처리하지 않습니다.
 
 ### 4) 서비스
