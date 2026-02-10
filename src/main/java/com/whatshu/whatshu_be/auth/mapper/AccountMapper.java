@@ -17,4 +17,6 @@ public interface AccountMapper {
     @Select("SELECT * FROM account ")
     List<Account> findAllAccount();
 
+    @Select("SELECT * FROM account WHERE email = #{email}")
+    Account findByEmail(String email);
 }
