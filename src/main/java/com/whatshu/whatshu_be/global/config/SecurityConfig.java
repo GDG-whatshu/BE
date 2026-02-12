@@ -21,6 +21,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         return http
                 // REST API 서비스는 CSRF 방지를 비활성화하는 것이 일반적
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 // H2 콘솔은 iframe 방식을 이용해 컨텐츠를 표시
                 .headers((headers) -> headers
