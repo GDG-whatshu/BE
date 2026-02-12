@@ -46,3 +46,4 @@ tmpclaude-*-cwd
 
 ### 로컬 파일 (개발용) ###
 application-local.properties
+nohup.out

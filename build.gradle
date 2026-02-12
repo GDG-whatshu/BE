@@ -53,6 +53,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:4.0.1'
+
+
+    // ▼▼▼ 이거 추가하세요! ▼▼▼
+    runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 tasks.named('test') {
