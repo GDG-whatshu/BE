@@ -24,6 +24,10 @@ public class CohortService {
     }
 
     public CohortResponseDto createCohort(CohortRequestDto cohortRequestDto) {
+        if (cohortMapper.findCohortByCohortNo(cohortRequestDto.getCohortNo()).isPresent()) {
+            throw new IllegalArgumentException("cohortNo에 해당하는 기수 데이터가 이미 존재합니다.");
+        }
+
         Cohort cohort = Cohort.from(cohortRequestDto);
 
         cohortMapper.insertCohort(cohort);
