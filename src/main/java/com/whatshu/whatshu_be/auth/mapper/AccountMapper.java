@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 //자바 mysql 연결
@@ -18,5 +19,5 @@ public interface AccountMapper {
     List<Account> findAllAccount();
 
     @Select("SELECT * FROM account WHERE email = #{email}")
-    Account findByEmail(String email);
+    Optional<Account> findByEmail(String email);
 }

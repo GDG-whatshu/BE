@@ -13,25 +13,20 @@ import org.springframework.stereotype.Service;
 public class LoginService {
     private final AccountMapper accountMapper;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider; // 토큰 주입
-
-
-    //로그인 로직
+    private final JwtTokenProvider jwtTokenProvider;
 
     public String login(LoginRequestDto dto) {
         // 1. 이메일로 회원 조회
-        Account account = accountMapper.findByEmail(dto.getEmail());
-        if (account == null) {
-            throw new IllegalArgumentException("가입되지 않은 이메일입니다.");
-        }
+        Account account = accountMapper.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
-        // 2. 비밀번호 검증 (입력받은 비번 vs DB 암호화된 비번)
+        // 2. 비밀번호 검증
+        // matches(입력받은비번, DB의암호화된비번) 순서로 비교
         if (!passwordEncoder.matches(dto.getPassword(), account.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        // 3. 인증 성공. 토큰 생성해서 반환
-        // role은 Enum이라서 String으로 변환해서 넣어줌
+        // 3. 인증 성공 -> 토큰 발급
         return jwtTokenProvider.createToken(account.getEmail(), account.getRole().name());
     }
 }
