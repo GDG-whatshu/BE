@@ -12,4 +12,5 @@ public class Account {
     private String password;
     private Role role;
 
+    private Byte cohortNo;
 }

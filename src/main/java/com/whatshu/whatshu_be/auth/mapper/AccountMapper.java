@@ -20,4 +20,7 @@ public interface AccountMapper {
 
     @Select("SELECT * FROM account WHERE email = #{email}")
     Optional<Account> findByEmail(String email);
+
+    @Select("SELECT * FROM account WHERE cohort_no = #{cohortNo}")
+    List<Account> findAccountsByCohortNo(Byte cohortNo);
 }
