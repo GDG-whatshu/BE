@@ -38,7 +38,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         // (1) 누구나 접근 가능: 로그인, 회원가입, 스웨거, H2 콘솔
-                        .requestMatchers("/auth/**", "/swagger-ui/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
 
                         // (2) 그 외 모든 요청은 인증(토큰) 필요
                         .anyRequest().authenticated()
