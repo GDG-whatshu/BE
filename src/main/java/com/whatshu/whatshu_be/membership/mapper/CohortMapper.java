@@ -1,5 +1,6 @@
 package com.whatshu.whatshu_be.membership.mapper;
 
+import com.whatshu.whatshu_be.membership.dto.CohortMemberAttendanceResponseDto;
 import com.whatshu.whatshu_be.membership.dto.FinishedSessionsResponseDto;
 import com.whatshu.whatshu_be.membership.entity.Cohort;
 import com.whatshu.whatshu_be.membership.entity.Member;
@@ -32,4 +33,11 @@ public interface CohortMapper {
         GROUP BY s.session_id
     """)
     public List<FinishedSessionsResponseDto.FinishedSession> findFinishedSessionsByCohortNo(int cohortNo);
+
+    @Select("""
+        SELECT a.member_id, s.type, s.date, status = 'PRESENT' AS is_present
+        FROM (attendances AS a JOIN sessions AS s USING (session_id)) JOIN members AS m USING (member_id)
+        WHERE a.member_id IS NOT NULL AND s.cohort_no = #{cohortNo} AND s.date < CURDATE()
+    """)
+    public List<CohortMemberAttendanceResponseDto.MemberSessionAttendance> findMemberSessionAttendancesByCohortNo(int cohortNo);
 }

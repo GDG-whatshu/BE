@@ -1,5 +1,6 @@
 package com.whatshu.whatshu_be.membership.controller;
 
+import com.whatshu.whatshu_be.membership.dto.CohortMemberAttendanceResponseDto;
 import com.whatshu.whatshu_be.membership.dto.CohortRequestDto;
 import com.whatshu.whatshu_be.membership.dto.CohortResponseDto;
 import com.whatshu.whatshu_be.membership.dto.FinishedSessionsResponseDto;
@@ -46,6 +47,13 @@ public class CohortController {
     @GetMapping("/{cohortNo}/finished-sessions")
     public ResponseEntity<CommonResponseBody<FinishedSessionsResponseDto>> getFinishedSessionsByCohortNo(@PathVariable int cohortNo) {
         FinishedSessionsResponseDto data = cohortService.getFinishedSessionsByCohortNo(cohortNo);
+
+        return ResponseEntity.ok(CommonResponseBody.success(data));
+    }
+
+    @GetMapping("/{cohortNo}/member-attendances")
+    public ResponseEntity<CommonResponseBody<CohortMemberAttendanceResponseDto>> getMemberAttendancesByCohortNo(@PathVariable int cohortNo) {
+        CohortMemberAttendanceResponseDto data = cohortService.getCohortMemberAttendancesByCohortNo(cohortNo);
 
         return ResponseEntity.ok(CommonResponseBody.success(data));
     }
