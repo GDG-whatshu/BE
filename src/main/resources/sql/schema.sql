@@ -14,3 +14,13 @@ CREATE TABLE IF NOT EXISTS account(
     PRIMARY KEY(account_id),
     CONSTRAINT uk_account_email UNIQUE (email) -- 'uk_account_email'라는 이름을 지어서 에러 찾기 편하게
 );
+
+CREATE TABLE IF NOT EXISTS members (
+    member_id BIGINT AUTO_INCREMENT NOT NULL,
+    cohort_no TINYINT NOT NULL CHECK cohort_no > 0,
+    name VARCHAR(10) NOT NULL,
+    role ENUM('CORE', 'MEMBER') DEFAULT 'MEMBER' NOT NULL,
+    PRIMARY KEY (member_id),
+    FOREIGN KEY (cohort_no) REFERENCES cohorts(cohort_no),
+    CONSTRAINT uk_member_cohort_no_name UNIQUE (cohort_no, name)
+);
