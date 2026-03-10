@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS account(
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('CORE','MEMBER', 'ADMIN') DEFAULT 'MEMBER' NOT NULL,
-    cohort_no TINYINT, --
     PRIMARY KEY(account_id),
     CONSTRAINT uk_account_email UNIQUE (email) -- 'uk_account_email'라는 이름을 지어서 에러 찾기 편하게
 );
