@@ -34,4 +34,11 @@ public class CohortController {
                 .status(HttpStatus.CREATED)
                 .body(CommonResponseBody.success(data));
     }
+
+    @GetMapping("/{cohortNo}")
+    public ResponseEntity<CommonResponseBody<CohortResponseDto>> getCohortByCohortNo(@PathVariable int cohortNo) {
+        CohortResponseDto data = cohortService.getCohortByCohortNo(cohortNo);
+
+        return ResponseEntity.ok(CommonResponseBody.success(data));
+    }
 }

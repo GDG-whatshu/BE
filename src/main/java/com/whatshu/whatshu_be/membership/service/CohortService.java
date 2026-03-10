@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,16 @@ public class CohortService {
         Cohort cohort = Cohort.from(cohortRequestDto);
 
         cohortMapper.insertCohort(cohort);
+
+        CohortResponseDto cohortResponse = CohortResponseDto.from(cohort);
+
+        return cohortResponse;
+    }
+
+    public CohortResponseDto getCohortByCohortNo(int cohortNo) {
+        Optional<Cohort> result = cohortMapper.findCohortByCohortNo(cohortNo);
+
+        Cohort cohort = result.orElseThrow();
 
         CohortResponseDto cohortResponse = CohortResponseDto.from(cohort);
 
