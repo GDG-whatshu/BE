@@ -2,6 +2,7 @@ package com.whatshu.whatshu_be.membership.service;
 
 import com.whatshu.whatshu_be.membership.dto.CohortRequestDto;
 import com.whatshu.whatshu_be.membership.dto.CohortResponseDto;
+import com.whatshu.whatshu_be.membership.dto.FinishedSessionsResponseDto;
 import com.whatshu.whatshu_be.membership.entity.Cohort;
 import com.whatshu.whatshu_be.membership.mapper.CohortMapper;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,15 @@ public class CohortService {
         CohortResponseDto cohortResponse = CohortResponseDto.from(cohort);
 
         return cohortResponse;
+    }
+
+    public FinishedSessionsResponseDto getFinishedSessionsByCohortNo(int cohortNo) {
+        List<FinishedSessionsResponseDto.FinishedSession> finishedSessionsList = cohortMapper.findFinishedSessionsByCohortNo(cohortNo);
+        List<Member> cohortMembers = cohortMapper.findMembersByCohortNo(cohortNo);
+
+        FinishedSessionsResponseDto finishedSessionsResponse =
+                FinishedSessionsResponseDto.of(cohortMembers.size(), finishedSessionsList.size(), finishedSessionsList);
+
+        return finishedSessionsResponse;
     }
 }

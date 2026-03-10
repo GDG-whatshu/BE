@@ -2,6 +2,7 @@ package com.whatshu.whatshu_be.membership.controller;
 
 import com.whatshu.whatshu_be.membership.dto.CohortRequestDto;
 import com.whatshu.whatshu_be.membership.dto.CohortResponseDto;
+import com.whatshu.whatshu_be.membership.dto.FinishedSessionsResponseDto;
 import com.whatshu.whatshu_be.membership.service.CohortService;
 import com.whatshu.whatshu_be.global.common.CommonResponseBody;
 import jakarta.validation.Valid;
@@ -38,6 +39,13 @@ public class CohortController {
     @GetMapping("/{cohortNo}")
     public ResponseEntity<CommonResponseBody<CohortResponseDto>> getCohortByCohortNo(@PathVariable int cohortNo) {
         CohortResponseDto data = cohortService.getCohortByCohortNo(cohortNo);
+
+        return ResponseEntity.ok(CommonResponseBody.success(data));
+    }
+
+    @GetMapping("/{cohortNo}/finished-sessions")
+    public ResponseEntity<CommonResponseBody<FinishedSessionsResponseDto>> getFinishedSessionsByCohortNo(@PathVariable int cohortNo) {
+        FinishedSessionsResponseDto data = cohortService.getFinishedSessionsByCohortNo(cohortNo);
 
         return ResponseEntity.ok(CommonResponseBody.success(data));
     }
