@@ -1,6 +1,7 @@
 package com.whatshu.whatshu_be.membership.mapper;
 
 import com.whatshu.whatshu_be.membership.entity.Cohort;
+import com.whatshu.whatshu_be.membership.entity.Member;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -19,4 +20,7 @@ public interface CohortMapper {
 
     @Insert("INSERT INTO cohorts VALUES (#{cohortNo}, #{organizer}, #{startDate}, #{endDate})")
     public void insertCohort(Cohort cohort);
+
+    @Select("SELECT * FROM members WHERE cohort_no = #{cohortNo}")
+    public List<Member> findMembersByCohortNo(int cohortNo);
 }
