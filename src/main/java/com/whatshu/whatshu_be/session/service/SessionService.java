@@ -22,7 +22,7 @@ public class SessionService {
 
     private final SessionMapper sessionMapper;
     private final AttendanceMapper attendanceMapper;
-    private final AccountMapper accountMapper; // 🌟 AccountMapper 주입 (멤버 정보 가져오기용)
+    private final AccountMapper accountMapper;
 
     /**
      * 1. 세션 생성 및 전체 멤버 자동 결석 처리
@@ -42,18 +42,18 @@ public class SessionService {
         sessionMapper.insertSession(session);
         Long newSessionId = session.getSessionId();
 
-        // 2) 🌟 드디어 진짜 멤버를 가져옵니다! (해당 기수의 전체 멤버 조회)
+        // 2) 해당 기수의 전체 멤버 조회
         List<Account> cohortMembers = accountMapper.findAccountsByCohortNo(requestDto.getCohortNo());
 
         // 3) 멤버 수만큼 'ABSENT(결석)' 출석 데이터 생성
         List<Attendance> attendances = new ArrayList<>();
-        // 가져온 회원이 있을 때만 실행 (NullPointerException 방지)
         if (cohortMembers != null && !cohortMembers.isEmpty()) {
             for (Account member : cohortMembers) {
+                // ERD 제약조건 반영: member_id가 있으므로 guest_name은 세팅하지 않음(null)
                 attendances.add(Attendance.builder()
                         .sessionId(newSessionId)
-                        .accountId(member.getAccountId())
-                        .status("ABSENT")
+                        .memberId(member.getAccountId()) // ERD의 member_id 필드에 대응
+                        .status("ABSENT") // 기본값 ABSENT
                         .build());
             }
             // 4) 출석 기록 한 번에 DB에 저장
@@ -78,31 +78,34 @@ public class SessionService {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
         for (Attendance att : attendances) {
-            String timeStr = att.getAttendedAt() != null ? att.getAttendedAt().format(timeFormatter) : "-";
-
-            // 🌟 나중에 Account 테이블과 Join(조인)해서 진짜 이메일/이름을 가져오는 쿼리로 발전시키면 더 좋습니다!
-            // 지금은 임시로 account_id를 이름 대신 뿌려줍니다.
-            String memberNameInfo = "멤버_" + att.getAccountId();
+            // ERD 반영: attendance_time 필드 사용
+            String timeStr = att.getAttendanceTime() != null ? att.getAttendanceTime().format(timeFormatter) : "-";
 
             if ("PRESENT".equals(att.getStatus())) {
-                if (att.getAccountId() != null) {
+                // ERD 조건: member_id가 NULL이 아니면 멤버, NULL이면 게스트
+                if (att.getMemberId() != null) {
+                    String memberNameInfo = "멤버_" + att.getMemberId();
                     presentMembers.add(SessionDetailResponseDto.MemberInfo.builder()
                             .attendanceId(att.getAttendanceId())
                             .name(memberNameInfo)
                             .time(timeStr)
                             .build());
-                } else {
+                } else if (att.getGuestName() != null) {
                     guests.add(SessionDetailResponseDto.GuestInfo.builder()
                             .guestName(att.getGuestName())
                             .time(timeStr)
                             .build());
                 }
             } else if ("ABSENT".equals(att.getStatus())) {
-                absentMembers.add(SessionDetailResponseDto.MemberInfo.builder()
-                        .attendanceId(att.getAttendanceId())
-                        .name(memberNameInfo)
-                        .time(timeStr)
-                        .build());
+                // 결석은 초기 생성된 멤버 데이터에만 해당됨
+                if (att.getMemberId() != null) {
+                    String memberNameInfo = "멤버_" + att.getMemberId();
+                    absentMembers.add(SessionDetailResponseDto.MemberInfo.builder()
+                            .attendanceId(att.getAttendanceId())
+                            .name(memberNameInfo)
+                            .time(timeStr)
+                            .build());
+                }
             }
         }
 

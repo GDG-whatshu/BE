@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,11 +12,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Attendance {
-    // MyBatis에서는 다른 클래스 자체를 넣기보다, 보통 ID(번호)만 저장하여 연결합니다.
-    private Long attendanceId;
-    private Long sessionId; // Session session 대신 아이디만!
-    private Long accountId; // Account account 대신 아이디만! (방문자는 null)
-    private String status;
-    private LocalDateTime attendedAt;
-    private String guestName;
+
+    private Long attendanceId;      // 출석 고유 ID
+    private Long sessionId;         // 세션 ID (외래키)
+
+    // 🌟 변경 포인트 1: accountId -> memberId
+    private Long memberId;          // 멤버 ID (회원인 경우)
+
+    private String guestName;       // 게스트 이름 (비회원인 경우)
+
+    private String status;          // 출석 상태 (PRESENT, ABSENT, LATE 등)
+
+    // 🌟 변경 포인트 2: attendedAt -> attendanceTime
+    private LocalDateTime attendanceTime; // 실제 출석 체크한 시간
 }
