@@ -4,6 +4,7 @@ import com.whatshu.whatshu_be.membership.dto.CohortRequestDto;
 import com.whatshu.whatshu_be.membership.dto.CohortResponseDto;
 import com.whatshu.whatshu_be.membership.service.CohortService;
 import com.whatshu.whatshu_be.global.common.CommonResponseBody;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class CohortController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponseBody<CohortResponseDto>> createCohort(@RequestBody CohortRequestDto cohortRequestDto) {
+    public ResponseEntity<CommonResponseBody<CohortResponseDto>> createCohort(@Valid @RequestBody CohortRequestDto cohortRequestDto) {
         CohortResponseDto data = cohortService.createCohort(cohortRequestDto);
 
         return ResponseEntity
