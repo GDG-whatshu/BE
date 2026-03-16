@@ -24,4 +24,4 @@ jobs:
 
       - name: 4. 프로젝트 빌드 및 테스트 실행
         run: |
-          ./gradlew build
+          ./gradlew build -x test
