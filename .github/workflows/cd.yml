@@ -30,7 +30,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
-          source: "BE/build/libs/*SNAPSHOT.jar"
+          source: "./build/libs/*SNAPSHOT.jar"
           target: "/home/ubuntu/BE/build/libs"
           strip_components: 3
 
