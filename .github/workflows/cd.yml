@@ -11,17 +11,16 @@ jobs:
 
     steps:
       - name: 1. 내 코드 가져오기
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: 2. 자바 21 환경 세팅하기
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
 
       - name: 3. 프로젝트 빌드 (테스트는 CI에서 했으니 생략)
         run: |
-          cd BE
           chmod +x gradlew
           ./gradlew clean build -x test
 
