@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AttendanceRequestDto {
-    @NotBlank(message = "등록된 실명을 정확히 입력해주세요.")
+    @NotBlank(message = "이름은 공백일 수 없습니다.") // 👈 피드백 반영
     private String name;
 
     private String comment;

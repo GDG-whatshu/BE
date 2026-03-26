@@ -12,20 +12,11 @@ import com.whatshu.whatshu_be.attendance.service.AttendanceService;
 
 
 @RestController
-@RequestMapping("/api/v1/sessions")
+@RequestMapping("sessions")
 @RequiredArgsConstructor
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
-
-    // 세션 정보 조회 API (QR 찍고 들어갔을 때 화면 렌더링용)
-    @GetMapping("/{sessionId}")
-    public ResponseEntity<CommonResponseBody<SessionResponseDto>> getSessionInfo(@PathVariable Long sessionId) {
-
-        SessionResponseDto response = attendanceService.getSessionInfo(sessionId);
-
-        return ResponseEntity.ok(CommonResponseBody.success(response));
-    }
 
 
     // 출석 제출 API (출석하기 버튼 클릭 시)

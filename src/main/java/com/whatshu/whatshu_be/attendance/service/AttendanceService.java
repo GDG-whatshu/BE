@@ -21,53 +21,28 @@ public class AttendanceService {
     // private final SessionMapper sessionMapper; // 코드 올리면 주석 해제
     private final MemberMapper  memberMapper;
 
-
-
-    //1. 세션 정보 조회 (Mock 데이터로 대체)
-    public SessionResponseDto getSessionInfo(Long sessionId) {
-        // TODO: 세션 코드 머지 되면 그때 가져오기
-        // Session session = sessionMapper.findById(sessionId);
-
-        System.out.println("임시 테스트용 가짜 세션 데이터를 반환합니다.");
-
-        // 가짜 세션 데이터 리턴 (프론트엔드 UI 렌더링용)
-        return SessionResponseDto.builder()
-                .sessionId(sessionId)
-                .cohortNo(7)
-                .type("GTL")
-                .title("GDG on Campus HUFS Tuesday Live (GTL) - Monthly(Online)")
-                .date(LocalDate.of(2026, 3, 17))
-                .build();
-    }
-
-    //2. 출석 제출 (DB 쓰기 작업 -> @Transactional)
     @Transactional
     public AttendanceResponseDto submitAttendance(Long sessionId, AttendanceRequestDto request) {
+        // TODO: 세션 코드 오면 세션의 실제 기수(cohortNo)를 가져오도록 수정
+        Integer tempCohortNo = 7;
 
-        // 1. 세션 정보 조회 (몇 기 세션인지 알아야 함)
-        Session session = sessionMapper.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 세션을 찾을 수 없습니다."));
-
-        // 2. 기수(cohort_no)와 입력한 이름(name)으로 멤버 명단에서 찾기!
-        Member member = memberMapper.findByCohortNoAndName(session.getCohortNo(), request.getName())
+        Member member = memberMapper.findByCohortNoAndName(tempCohortNo, request.getName())
                 .orElseThrow(() -> new IllegalArgumentException("등록된 실명과 일치하지 않습니다. 철자를 확인해주세요."));
 
-        // 3. 중복 출석 검증
-        if (attendanceMapper.existsBySessionIdAndMemberId(sessionId, member.getMemberId())) {
+        // 🚨 기존: existsBySessionIdAndUserId 로 확인하던 부분을 status 체크로 변경!
+        String currentStatus = attendanceMapper.getAttendanceStatus(sessionId, member.getMemberId());
+
+        if (currentStatus == null) {
+            throw new IllegalArgumentException("해당 세션의 출석 명단에 존재하지 않습니다.");
+        }
+        if ("ATTEND".equals(currentStatus)) { // DB의 출석 상태값(예: ATTEND 또는 PRESENT)에 맞추세요
             throw new IllegalArgumentException("이미 출석이 완료된 세션입니다.");
         }
 
-        // 4. 출석 엔티티 생성 및 저장
-        Attendance attendance = Attendance.builder()
-                .sessionId(sessionId)
-                .memberId(member.getMemberId())
-                .comment(request.getComment())
-                .build();
-
-        attendanceMapper.insertAttendance(attendance);
+        attendanceMapper.updateAttendanceStatus(sessionId, member.getMemberId(), request.getComment());
 
         return AttendanceResponseDto.builder()
-                .attendanceId(attendance.getId())
+                // 업데이트의 경우 ID를 새로 생성하지 않으므로, memberId나 sessionId를 활용하거나 메시지만 반환
                 .message("출석이 성공적으로 완료되었습니다!")
                 .build();
     }
