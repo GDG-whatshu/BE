@@ -2,6 +2,7 @@ package com.whatshu.whatshu_be.global.config;
 
 import com.whatshu.whatshu_be.global.filter.JwtAuthenticationFilter;
 import com.whatshu.whatshu_be.global.util.JwtTokenProvider;
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,12 +38,10 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // (1) 누구나 접근 가능: 로그인, 회원가입, 스웨거, H2 콘솔
-                        //.requestMatchers("/auth/**", "/swagger-ui/**", "/h2-console/**").permitAll()
-                        //.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/h2-console/**").permitAll()
-                        //.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/h2-console/**", "/sessions/**").permitAll()
+                        // dispatcherTypeMatchers - 에러 발생 시 내부적으로 돌아가는 요청은 모두 허용
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         // (1) 누구나 접근 가능: 로그인, 회원가입, 스웨거, H2 콘솔, 그리고 세션 API(테스트용)
-                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/h2-console/**", "/sessions/**", "/error").permitAll()
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/h2-console/**", "/sessions/**").permitAll()
                         // (2) 그 외 모든 요청은 인증(토큰) 필요
                         .anyRequest().authenticated()
                 )

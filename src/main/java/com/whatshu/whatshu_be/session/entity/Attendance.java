@@ -17,9 +17,9 @@ public class Attendance {
     private Long sessionId;         // 세션 ID (외래키)
 
     // 🌟 변경 포인트 1: accountId -> memberId
-    private Long memberId;          // 멤버 ID (회원인 경우)
+    private Long memberId;          // 멤버 ID (멤버인 경우)
 
-    private String guestName;       // 게스트 이름 (비회원인 경우)
+    private String guestName;       // 게스트 이름 (멤버가 아닌 경우)
 
     private String status;          // 출석 상태 (PRESENT, ABSENT, LATE 등)
 
