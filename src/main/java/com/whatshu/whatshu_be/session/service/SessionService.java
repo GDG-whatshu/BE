@@ -22,7 +22,7 @@ public class SessionService {
 
     private final SessionMapper sessionMapper;
     private final AttendanceMapper attendanceMapper;
-    private final AccountMapper accountMapper;
+    private final MemberMapper memberMapper;
 
     /**
      * 1. 세션 생성 및 전체 멤버 자동 결석 처리
@@ -43,16 +43,16 @@ public class SessionService {
         Long newSessionId = session.getSessionId();
 
         // 2) 해당 기수의 전체 멤버 조회
-        List<Account> cohortMembers = accountMapper.findAccountsByCohortNo(requestDto.getCohortNo());
+        List<Member> cohortMembers = MemberMapper.findMembersByCohortNo(requestDto.getCohortNo());
 
         // 3) 멤버 수만큼 'ABSENT(결석)' 출석 데이터 생성
         List<Attendance> attendances = new ArrayList<>();
         if (cohortMembers != null && !cohortMembers.isEmpty()) {
-            for (Account member : cohortMembers) {
+            for (Member member : cohortMembers) {
                 // ERD 제약조건 반영: member_id가 있으므로 guest_name은 세팅하지 않음(null)
                 attendances.add(Attendance.builder()
                         .sessionId(newSessionId)
-                        .memberId(member.getAccountId()) // ERD의 member_id 필드에 대응
+                        .memberId(member.getMemberId()) // ERD의 member_id 필드에 대응
                         .status("ABSENT") // 기본값 ABSENT
                         .build());
             }

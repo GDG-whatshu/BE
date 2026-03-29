@@ -27,20 +27,20 @@ CREATE TABLE IF NOT EXISTS members (
 
 -- 세션(Session) 테이블 생성
 CREATE TABLE IF NOT EXISTS sessions (
-                         session_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         cohort_no TINYINT NOT NULL,
+    session_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    cohort_no TINYINT NOT NULL,
     -- ERD 명세대로 ENUM 적용
-                         type ENUM('GTL Weekly', 'GTL Monthly', 'Quarterly (온보딩)', 'Quarterly (수료식)', 'Quarterly') NOT NULL,
-                         title VARCHAR(255) NOT NULL,
-                         date DATE NOT NULL, -- 날짜만 저장 (시간 필요 시 DATETIME으로 협의 필요)
-                         description VARCHAR(255),
-                         FOREIGN KEY (cohort_no) REFERENCES cohorts(cohort_no)
+    type ENUM('GTL Weekly', 'GTL Monthly', 'Quarterly (온보딩)', 'Quarterly (수료식)', 'Quarterly') NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    date DATE NOT NULL, -- 날짜만 저장 (시간 필요 시 DATETIME으로 협의 필요)
+    description VARCHAR(255),
+    FOREIGN KEY (cohort_no) REFERENCES cohorts(cohort_no)
 );
 
 -- 출석(Attendance) 테이블 생성
 CREATE TABLE IF NOT EXISTS attendances (
     -- 1. PK 및 자동 생성, NULL 허용 안 함
-                            attendance_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        attendance_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     -- 2. 외래키(FK), NULL 허용 안 함
                             session_id BIGINT NOT NULL,
     -- 3. FK, NULL 허용 (게스트일 경우 NULL)
