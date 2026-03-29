@@ -1,7 +1,5 @@
 package com.whatshu.whatshu_be.session.service;
 
-import com.whatshu.whatshu_be.auth.entity.Account;
-import com.whatshu.whatshu_be.auth.mapper.AccountMapper;
 import com.whatshu.whatshu_be.session.dto.SessionCreateRequestDto;
 import com.whatshu.whatshu_be.session.dto.SessionDetailResponseDto;
 import com.whatshu.whatshu_be.session.entity.Attendance;
