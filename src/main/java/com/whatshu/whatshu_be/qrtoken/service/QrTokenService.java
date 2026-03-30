@@ -2,6 +2,7 @@ package com.whatshu.whatshu_be.qrtoken.service;
 
 import com.whatshu.whatshu_be.global.util.CryptoProvider;
 import com.whatshu.whatshu_be.qrtoken.dto.QrTokenResponseDto;
+import com.whatshu.whatshu_be.qrtoken.dto.QrValidationResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class QrTokenService {
 
     private final CryptoProvider cryptoProvider;
 
-    @Value("qr.token.exp.minutes")
+    @Value("${qr.token.exp.minutes}")
     private int expMinutes;
 
     public QrTokenResponseDto generateToken(Long sessionId) {
@@ -28,5 +29,11 @@ public class QrTokenService {
         String token = cryptoProvider.encode(claims);
 
         return QrTokenResponseDto.of(token);
+    }
+
+    public QrValidationResponseDto validateToken(String token) {
+        Map<String, Object> claims = (Map<String, Object>) cryptoProvider.decode(token);
+
+        return QrValidationResponseDto.of((Long) claims.get("sid"));
     }
 }
