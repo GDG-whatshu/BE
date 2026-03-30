@@ -6,6 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AttendanceResponseDto {
-    private Long attendanceId;
     private String message;
 }

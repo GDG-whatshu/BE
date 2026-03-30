@@ -2,7 +2,6 @@ package com.whatshu.whatshu_be.attendance.controller;
 
 import com.whatshu.whatshu_be.attendance.dto.AttendanceRequestDto;
 import com.whatshu.whatshu_be.attendance.dto.AttendanceResponseDto;
-import com.whatshu.whatshu_be.attendance.dto.SessionResponseDto;
 import com.whatshu.whatshu_be.global.common.CommonResponseBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import com.whatshu.whatshu_be.attendance.service.AttendanceService;
 
 
 @RestController
-@RequestMapping("sessions")
+@RequestMapping("/sessions")
 @RequiredArgsConstructor
 public class AttendanceController {
 
