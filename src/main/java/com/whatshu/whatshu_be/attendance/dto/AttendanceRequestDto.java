@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class AttendanceRequestDto {
     @NotBlank(message = "이름은 공백일 수 없습니다.") // 👈 피드백 반영
     private String name;
-
+    private Boolean isGuest; // true면 게스트, false나 null이면 정규 멤버
     private String comment;
 }

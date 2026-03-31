@@ -23,13 +23,31 @@ public class AttendanceService {
     @Transactional
     public AttendanceResponseDto submitAttendance(Long sessionId, AttendanceRequestDto request) {
 
-        // SessionMapper를 이용해 DB에서 실제 세션 정보 가져오기
+        // 1. SessionMapper를 이용해 DB에서 실제 세션 정보 가져오기
         Session session = sessionMapper.selectSessionById(sessionId);
         if (session == null) {
             throw new IllegalArgumentException("해당 세션을 찾을 수 없습니다.");
         }
 
-        // 세션 객체에서 기수(cohortNo) 뽑아오기
+
+        // 게스트는 명단에 없으므로 새로 INSERT
+        if (Boolean.TRUE.equals(request.getIsGuest())) {
+
+            // 중복 출석 방지 (같은 세션에 같은 이름의 게스트가 또 제출하는 것 방지)
+            int guestCount = attendanceMapper.countGuestAttendance(sessionId, request.getName());
+            if (guestCount > 0) {
+                throw new IllegalArgumentException("이미 출석이 완료된 게스트입니다.");
+            }
+
+            // 게스트 출석 기록 생성 (memberId는 null, guestName에 이름 저장)
+            attendanceMapper.insertGuestAttendance(sessionId, request.getName(), request.getComment());
+
+            return AttendanceResponseDto.builder()
+                    .message("게스트 출석이 성공적으로 완료되었습니다!")
+                    .build();
+        }
+
+        // 정규 멤버는 기존대로 수행
         Integer currentCohortNo = Integer.valueOf(session.getCohortNo());
 
         // 실제 기수와 입력한 이름으로 출석 대상 멤버 찾기
@@ -44,7 +62,7 @@ public class AttendanceService {
         }
 
         // 검증
-        if ("PRESENT".equals(currentStatus) || "ATTEND".equals(currentStatus)) {
+        if ("PRESENT".equals(currentStatus) ) {
             throw new IllegalArgumentException("이미 출석이 완료된 세션입니다.");
         }
 
