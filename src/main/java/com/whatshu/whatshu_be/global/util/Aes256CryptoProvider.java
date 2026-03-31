@@ -21,6 +21,7 @@ public class Aes256CryptoProvider implements CryptoProvider {
 
     private final Key key;
     private final ObjectMapper objectMapper = new ObjectMapper(new MessagePackFactory());
+    private final SecureRandom secureRandom = new SecureRandom();
 
     public Aes256CryptoProvider(String secretKey) {
 
@@ -92,7 +93,7 @@ public class Aes256CryptoProvider implements CryptoProvider {
             // 3. AES-GCM encryption
             // Generate random 12-byte IV
             byte[] iv = new byte[12];
-            new SecureRandom().nextBytes(iv);
+            secureRandom.nextBytes(iv);
 
             // Initialize cipher for encryption
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
