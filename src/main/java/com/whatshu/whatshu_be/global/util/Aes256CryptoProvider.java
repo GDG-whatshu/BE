@@ -27,17 +27,27 @@ public class Aes256CryptoProvider implements CryptoProvider {
         byte[] keyBytes;
 
         try {
-            // 1. Base64 디코딩 시도 (프로덕션 환경의 적절히 인코딩된 키)
+            // 1. 표준 Base64 디코딩 시도
             keyBytes = Base64.getDecoder().decode(secretKey);
 
-            // Base64 디코딩이 성공하더라도 키 길이가 32바이트가 아니면 SHA-256 해싱
+            // 디코딩 성공하더라도 키 길이가 32바이트가 아니면 SHA-256 해싱
             if (keyBytes.length != 32) {
                 keyBytes = hashToAes256Key(secretKey);
             }
 
         } catch (IllegalArgumentException e) {
-            // 2. Base64 디코딩 실패 시 SHA-256 해싱 (개발 환경의 일반 문자열)
-            keyBytes = hashToAes256Key(secretKey);
+            try {
+                // 2. URL-safe Base64 디코딩 시도
+                keyBytes = Base64.getUrlDecoder().decode(secretKey);
+
+                if (keyBytes.length != 32) {
+                    keyBytes = hashToAes256Key(secretKey);
+                }
+
+            } catch (IllegalArgumentException ex) {
+                // 3. 디코딩 실패 시 SHA-256 해싱 (개발 환경의 일반 문자열)
+                keyBytes = hashToAes256Key(secretKey);
+            }
         }
 
         this.key = new SecretKeySpec(keyBytes, "AES");
