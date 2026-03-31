@@ -147,8 +147,10 @@ class Aes256CryptoProviderTest {
         claims.put("exp", Instant.now().plusSeconds(3600));
         String token = aes256CryptoProvider.encode(claims);
 
-        // When: 토큰의 한 문자를 변경
-        String tamperedToken = token.substring(0, token.length() - 1) + "X";
+        // When: 토큰의 마지막 문자를 반드시 다른 문자로 변경
+        char lastChar = token.charAt(token.length() - 1);
+        char replacedChar = (lastChar == 'A') ? 'B' : 'A';
+        String tamperedToken = token.substring(0, token.length() - 1) + replacedChar;
 
         // Then
         assertThrows(RuntimeException.class, () -> {
