@@ -17,5 +17,5 @@ public interface MemberMapper {
 
     // MemberMapper.java에 추가
     @Select("SELECT * FROM members WHERE cohort_no = #{cohortNo}")
-    List<Member> findMembersByCohortNo(Integer cohortNo);
+    List<Member> findMembersByCohortNo(Byte cohortNo);
 }
