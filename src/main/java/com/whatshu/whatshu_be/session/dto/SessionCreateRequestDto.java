@@ -9,5 +9,5 @@ public class SessionCreateRequestDto {
     private LocalDateTime date;
     private String type;
     private String description;
-    private Byte cohortNo;
+    private Integer cohortNo;
 }
